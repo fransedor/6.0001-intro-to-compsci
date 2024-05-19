@@ -91,8 +91,15 @@ def get_guessed_word(secret_word, letters_guessed):
       which letters in secret_word have been guessed so far.
     '''
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
-
+    res = ["_ "] * len(secret_word)
+    curr_word = secret_word
+    for letter in letters_guessed:
+      letter_index = curr_word.find(letter)
+      while letter_index >= 0:
+                    curr_word = curr_word.replace(letter, '*', 1)
+                    res[letter_index] = letter
+                    letter_index = curr_word.find(letter)
+    return ''.join(res)
 
 
 def get_available_letters(letters_guessed):
