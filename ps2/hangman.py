@@ -134,6 +134,15 @@ def is_input_valid(input: str, letters_guessed: list):
         "is_valid": True
 		}
 
+def get_unique_letters_of_secret_word(secret_word: str):
+    count = 0
+    letters_dict = {}
+    for letter in secret_word:
+        if letter not in letters_dict:
+            letters_dict[letter] = 1
+            count += 1
+    return count
+
 def hangman(secret_word):
     '''
     secret_word: string, the secret word to guess.
@@ -176,6 +185,7 @@ def hangman(secret_word):
             available_warnings = available_warnings - 1
             if available_warnings < 0:
                 print(f"{validated_input.get('message')} You have no warnings left so you lose one guess: {get_guessed_word(secret_word, letters_guessed)}")
+                available_guess = available_guess - 1
             else:
                 print(f"{validated_input.get('message')} You have {available_warnings} warnings left: {get_guessed_word(secret_word, letters_guessed)}")
         else:
@@ -191,7 +201,7 @@ def hangman(secret_word):
         print("-"*10)
         print("Congratulations, you won!")
         # use len on secret_word for now, need to change to unique letters of secret_word
-        print(f"Your total score for this game is: {available_guess * len(secret_word)}")
+        print(f"Your total score for this game is: {available_guess * get_unique_letters_of_secret_word(secret_word)}")
     return
 
 
@@ -273,14 +283,14 @@ def hangman_with_hints(secret_word):
 # Hint: You might want to pick your own secret_word while you're testing.
 
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
     # pass
 
     # To test part 2, comment out the pass line above and
     # uncomment the following two lines.
     
-secret_word = choose_word(wordlist)
-hangman(secret_word)
+		secret_word = choose_word(wordlist)
+		hangman(secret_word)
 
 ###############
     
