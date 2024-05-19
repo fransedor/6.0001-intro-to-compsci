@@ -90,7 +90,6 @@ def get_guessed_word(secret_word, letters_guessed):
     returns: string, comprised of letters, underscores (_), and spaces that represents
       which letters in secret_word have been guessed so far.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
     res = ["_ "] * len(secret_word)
     curr_word = secret_word
     for letter in letters_guessed:
@@ -108,8 +107,12 @@ def get_available_letters(letters_guessed):
     returns: string (of letters), comprised of letters that represents which letters have not
       yet been guessed.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    all_alphabet_array = list(string.ascii_lowercase)
+    for letter in letters_guessed:
+        letter_index = ord(letter) - 97
+        all_alphabet_array[letter_index] = ""
+    return "".join(all_alphabet_array)
+
     
     
 
