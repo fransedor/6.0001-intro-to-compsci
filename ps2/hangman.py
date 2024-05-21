@@ -242,8 +242,14 @@ def show_possible_matches(my_word):
              that has already been revealed.
 
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    matches = []
+    for word in wordlist:
+      if (match_with_gaps(my_word, word)):
+        matches.append(word)
+    if len(matches) == 0:
+      print("No matches found")
+    matches_as_string = " ".join(matches)
+    print(matches_as_string)
 
 
 
