@@ -96,7 +96,7 @@ def get_word_score(word: str, n: int):
     word_score = 0
     final_word_score = 0
     for letter in lowercase_word:
-        word_score += SCRABBLE_LETTER_VALUES.get(letter)
+        word_score += SCRABBLE_LETTER_VALUES.get(letter, 0)
     second_component = ((7 * len(word) - 3 * (n - len(word))))
     final_word_score = max(word_score * second_component, word_score)
     return final_word_score
@@ -143,14 +143,14 @@ def deal_hand(n):
     hand={}
     num_vowels = int(math.ceil(n / 3))
 
-    for i in range(num_vowels):
+    for i in range(num_vowels-1):
         x = random.choice(VOWELS)
         hand[x] = hand.get(x, 0) + 1
     
-    for i in range(num_vowels, n):    
+    for i in range(num_vowels-1, n):    
         x = random.choice(CONSONANTS)
         hand[x] = hand.get(x, 0) + 1
-    
+    hand["*"] = 1
     return hand
 
 #
@@ -184,6 +184,30 @@ def update_hand(hand: dict, word: str):
             new_hand[letter] = 0
     return new_hand
 
+def is_valid_word_with_asterisk(word: str, hand: dict, word_list: list):
+    hand_copy = hand.copy()
+    word_to_check = ""
+    for vowel in VOWELS:
+        replaced_asterisk = word.lower().replace("*", vowel)
+        if replaced_asterisk in word_list:
+            hand_copy["*"] = 0
+            if vowel in hand_copy:
+                hand_copy[vowel] += 1
+            else:
+                hand_copy[vowel] = 1
+            word_to_check = replaced_asterisk
+            break
+    for letter in word_to_check:
+        count_in_hand = hand_copy.get(letter, 0)
+        if count_in_hand == 0:
+            return False
+        else:
+            hand_copy[letter] -= 1
+    if len(word_to_check) == 0:
+        return False
+    return True
+    
+
 #
 # Problem #3: Test word validity
 #
@@ -199,6 +223,8 @@ def is_valid_word(word: str, hand: dict, word_list: list):
     returns: boolean
     """
 
+    if word.find("*") >= 0:
+        return is_valid_word_with_asterisk(word, hand, word_list)
     is_in_word_list = word.lower() in word_list
     is_in_hand = True
     hand_copy = hand.copy()
