@@ -187,7 +187,7 @@ def update_hand(hand: dict, word: str):
 #
 # Problem #3: Test word validity
 #
-def is_valid_word(word, hand, word_list):
+def is_valid_word(word: str, hand: dict, word_list: list):
     """
     Returns True if word is in the word_list and is entirely
     composed of letters in the hand. Otherwise, returns False.
@@ -199,8 +199,17 @@ def is_valid_word(word, hand, word_list):
     returns: boolean
     """
 
-    pass  # TO DO... Remove this line when you implement this function
+    is_in_word_list = word.lower() in word_list
+    is_in_hand = True
+    hand_copy = hand.copy()
 
+    for letter in word.lower():
+        count_in_hand = hand_copy.get(letter, 0)
+        if count_in_hand == 0:
+            return False
+        else:
+            hand_copy[letter] -= 1
+    return is_in_word_list and is_in_hand
 #
 # Problem #5: Playing a hand
 #
