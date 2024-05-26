@@ -239,7 +239,7 @@ def is_valid_word(word: str, hand: dict, word_list: list):
 #
 # Problem #5: Playing a hand
 #
-def calculate_handlen(hand):
+def calculate_handlen(hand: dict):
     """ 
     Returns the length (number of letters) in the current hand.
     
@@ -247,7 +247,10 @@ def calculate_handlen(hand):
     returns: integer
     """
     
-    pass  # TO DO... Remove this line when you implement this function
+    count = 0
+    for letter in hand:
+        count += hand[letter]
+    return count
 
 def play_hand(hand, word_list):
 
@@ -281,35 +284,45 @@ def play_hand(hand, word_list):
     """
     
     # BEGIN PSEUDOCODE <-- Remove this comment when you implement this function
+    
     # Keep track of the total score
-    
+    total_score = 0
     # As long as there are still letters left in the hand:
-    
+    while calculate_handlen(hand) > 0:
+        
         # Display the hand
-        
+        display_hand(hand)
         # Ask user for input
-        
+        word = input("Enter word, or \"!!\" to indicate that you are finished: ")
         # If the input is two exclamation points:
-        
+        if word == "!!":
             # End the game (break out of the loop)
-
+            break
             
         # Otherwise (the input is not two exclamation points):
-
+        else:
             # If the word is valid:
-
+            if is_valid_word(word, hand, word_list):
                 # Tell the user how many points the word earned,
                 # and the updated total score
-
+                score = get_word_score(word, calculate_handlen(hand))
+                total_score += score
+                print(f"\"{word}\" earned {score} points. Total: {total_score} points")
             # Otherwise (the word is not valid):
+            else:
                 # Reject invalid word (print a message)
                 
+                print("That is not a valid word. Please choose another word.")
             # update the user's hand by removing the letters of their inputted word
-            
+            hand = update_hand(hand, word)
 
     # Game is over (user entered '!!' or ran out of letters),
     # so tell user the total score
-
+    print()
+    if calculate_handlen(hand) > 0:
+        print(f"Total score: {total_score} points")
+    else:
+        print(f"Ran out of letters. Total score: {total_score} points")
     # Return the total score as result of function
 
 

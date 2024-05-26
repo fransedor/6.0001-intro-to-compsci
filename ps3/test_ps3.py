@@ -262,3 +262,5 @@ print("----------------------------------------------------------------------")
 print("Testing wildcards...")
 test_wildcard(word_list)
 print("All done!")
+
+play_hand(deal_hand(7), word_list)
