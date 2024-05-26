@@ -116,11 +116,13 @@ def display_hand(hand):
 
     hand: dictionary (string -> int)
     """
+    # Modified to follow the play_game and play_hand example
+    hand_as_array = []
     
     for letter in hand.keys():
         for j in range(hand[letter]):
-             print(letter, end=' ')      # print all on the same line
-    print()                              # print an empty line
+            hand_as_array.append(letter)      # print all on the same line
+    print(f"Current hand: {' '.join(hand_as_array)}")                              # print an empty line
 
 #
 # Make sure you understand how this function works and what it does!
@@ -287,11 +289,14 @@ def play_hand(hand, word_list):
     
     # Keep track of the total score
     total_score = 0
+    # Copy hand to ensure no side effect
+    hand_copy = hand.copy()
     # As long as there are still letters left in the hand:
-    while calculate_handlen(hand) > 0:
+    while calculate_handlen(hand_copy) > 0:
         
         # Display the hand
-        display_hand(hand)
+        display_hand(hand_copy)
+
         # Ask user for input
         word = input("Enter word, or \"!!\" to indicate that you are finished: ")
         # If the input is two exclamation points:
@@ -302,10 +307,10 @@ def play_hand(hand, word_list):
         # Otherwise (the input is not two exclamation points):
         else:
             # If the word is valid:
-            if is_valid_word(word, hand, word_list):
+            if is_valid_word(word, hand_copy, word_list):
                 # Tell the user how many points the word earned,
                 # and the updated total score
-                score = get_word_score(word, calculate_handlen(hand))
+                score = get_word_score(word, calculate_handlen(hand_copy))
                 total_score += score
                 print(f"\"{word}\" earned {score} points. Total: {total_score} points")
             # Otherwise (the word is not valid):
@@ -314,16 +319,17 @@ def play_hand(hand, word_list):
                 
                 print("That is not a valid word. Please choose another word.")
             # update the user's hand by removing the letters of their inputted word
-            hand = update_hand(hand, word)
+            hand_copy = update_hand(hand_copy, word)
 
     # Game is over (user entered '!!' or ran out of letters),
     # so tell user the total score
     print()
-    if calculate_handlen(hand) > 0:
-        print(f"Total score: {total_score} points")
+    if calculate_handlen(hand_copy) > 0:
+        print(f"Total score for this hand: {total_score} points")
     else:
         print(f"Ran out of letters. Total score: {total_score} points")
     # Return the total score as result of function
+    return total_score
 
 
 
@@ -403,10 +409,29 @@ def play_game(word_list):
 
     word_list: list of lowercase strings
     """
-    
-    print("play_game not implemented.") # TO DO... Remove this line when you implement this function
-    
-
+    total_score = 0
+    hands_count = int(input("Enter total number of hands: "))
+    # While user still has hands
+    while hands_count > 0:
+        hand = deal_hand(HAND_SIZE)
+        display_hand(hand)
+        # Ask the user if they would substitute letter
+        is_substitute_letter = input("Would you like to substitute a letter? ")
+        if is_substitute_letter.lower() == "yes":
+            substituted_letter = input("Which letter would you like to replace: ")
+            hand = substitute_hand(hand, substituted_letter)
+        # Print new line
+        print()
+        # Play the current hand
+        hand_score = play_hand(hand, word_list)
+        print("----------")
+        is_replay = input("Would you like to replay the hand? ")
+        if is_replay.lower() == "yes":
+            hand_score = play_hand(hand, word_list)
+            print("----------")
+        total_score += hand_score
+        hands_count -= 1
+    print(f"Total score over all hands: {total_score}")
 
 #
 # Build data structures used for entire session and play game
