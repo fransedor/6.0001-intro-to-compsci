@@ -78,28 +78,79 @@ class NewsStory:
 #======================
 
 class Trigger(object):
-    def evaluate(self, story):
-        """
-        Returns True if an alert should be generated
-        for the given news item, or False otherwise.
-        """
-        # DO NOT CHANGE THIS!
-        raise NotImplementedError
+  def evaluate(self, story):
+      """
+      Returns True if an alert should be generated
+      for the given news item, or False otherwise.
+      """
+      # DO NOT CHANGE THIS!
+      raise NotImplementedError
 
 # PHRASE TRIGGERS
 
 # Problem 2
 # TODO: PhraseTrigger
 class PhraseTrigger(Trigger):
-  def __init__(self, story):
-    super().__init__(self, story, phrase)
+  def __init__(self, phrase):
+    self.phrase = phrase
 
+  def evaluate(self, phrase, trigger_text):
+    """
+    Returns True if an alert should be generated
+    for the given news item by phrase, or False otherwise.
+    """
+    lower_phrase = self.phrase.lower()
+    lower_trigger_text = trigger_text.lower()
+    punctutation = string.punctuation
+
+    trigger_text_with_removed_punctuation = lower_trigger_text.translate(str.maketrans('', '', punctutation))
+    print("punctuation removed:", trigger_text_with_removed_punctuation)
+    
+    phrase_index = trigger_text_with_removed_punctuation.find(lower_phrase)
+    if phrase_index >= 0:
+      return True
+    else:
+      return False
+
+phrase_trigger = PhraseTrigger('purple!! cow!!')
+phrase_trigger.evaluate('PURPLE COW', 'The purple cow is soft and cuddly.')
 # Problem 3
 # TODO: TitleTrigger
+class TitleTrigger(PhraseTrigger):
+  def __init__(self, phrase):
+    super().__init__(phrase)
+
+  def evaluate(self, story):
+    lower_title = story.title.lower()
+    lower_phrase = self.phrase.lower()
+    punctutation = string.punctuation
+
+    title_with_removed_punctuation = lower_title.translate(str.maketrans('', '', punctutation))
+    print("punctuation removed: ", title_with_removed_punctuation)
+
+
+    title_index = title_with_removed_punctuation.find(lower_phrase)
+    if title_index >= 0:
+      return True
+    else:
+      return False
 
 # Problem 4
 # TODO: DescriptionTrigger
+class DescriptionTrigger(PhraseTrigger):
+  def __init__(self, story, phrase):
+    super().__init__(story, phrase)
 
+    def evaluate(self, story, phrase:str, trigger_text: str):
+      lower_phrase = phrase.lower()
+      lower_trigger_text = trigger_text.lower()
+      punctutation = string.punctuation
+
+      phrase_with_removed_punctuation = lower_phrase.translate(str.maketrans('', '', punctutation))
+      print("punctuation removed: ", phrase_with_removed_punctuation)
+
+
+      return True
 # TIME TRIGGERS
 
 # Problem 5
